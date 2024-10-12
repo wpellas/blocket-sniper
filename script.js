@@ -50,8 +50,12 @@ function injectBlocket(i, latestArticleName) {
   if (!blocketListWrapper) {
     console.log("Error occured on page reload, refreshing...");
     setTimeout(() => {
-      location.reload();
-      return;
+      i++;
+      chrome.storage.local.set({ currentValue: i }, () => {
+        console.log(`Value of i updated to: ${i}`);
+        location.reload();
+        return;
+      });
     }, Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000); // Random delay between 3-5 seconds
   }
   // Find the first Article element in blocketListWrapper with a class that contains "styled__Article"
@@ -137,7 +141,7 @@ function watchOverEverything() {
         });
       }
     });
-  }, 10000);
+  }, 25000);
 }
 
 // Add event listeners to the buttons
@@ -180,6 +184,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     });
     setTimeout(() => {
       injectScript();
+      watchOverEverything();
     }, 3000);
   }
   // Play the sound and open the article in a new tab if `latestArticleName` changes
