@@ -1,0 +1,57 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  border: 0px;
+}
+.blocket-sniper {
+  display: flex;
+  flex-direction: column;
+  width: 450px;
+  height: auto;
+  border: 4px solid #4caf50;
+  overflow: hidden;
+  padding: 16px 8px;
+}
+.blocket-sniper-logo {
+  max-width: 256px;
+  margin: 0 auto;
+}
+#blocket-sniper-title {
+  text-transform: uppercase;
+  text-align: center;
+}
+.blocket-sniper-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 256px;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  text-transform: uppercase;
+}
+button:hover {
+  background-color: #45a049;
+}
+button#blocket-sniper-reset-counter {
+  background-color: #f44336;
+}
+button#blocket-sniper-reset-counter:hover {
+  background-color: #d32f2f;
+}
+.blocket-sniper-reloads-tracker {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
