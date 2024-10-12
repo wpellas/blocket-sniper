@@ -2,26 +2,24 @@
 const body = document.getElementsByClassName("blocket-sniper");
 const targetElement = document.getElementById("blocket-sniper-target-element");
 const triggerAudio = new Audio("trigger.ogg");
+let latestArticleName;
 
 // Check if and what the value of `currentValue` is
-chrome.storage.local.get(["currentValue"], (result) => {
-  const currentValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
-  targetElement.innerHTML = currentValue;
-});
-// Check if and what the value of `latestArticleName` is
-let latestArticleName;
-chrome.storage.local.get(["latestArticleName"], (result) => {
-  if (result.latestArticleName) {
-    latestArticleName = result.latestArticleName;
+chrome.storage.local.get(
+  ["currentValue", "latestArticleName", "articleLinkHref"],
+  (result) => {
+    const currentValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
+    targetElement.innerHTML = currentValue;
+    // Check if and what the value of `latestArticleName` is
+    if (result.latestArticleName) {
+      latestArticleName = result.latestArticleName;
+    }
+    // Check if and what the value of `articleLinkHref` is
+    if (result.articleLinkHref) {
+      console.log(`Value of article link: ${result.articleLinkHref}`);
+    }
   }
-});
-
-// Check if and what the value of `articleLinkHref` is
-chrome.storage.local.get(["articleLinkHref"], (result) => {
-  if (result.articleLinkHref) {
-    console.log(`Value of article link: ${result.articleLinkHref}`);
-  }
-});
+);
 
 // Check if and what the value of `refreshedAutomatically` is, if it's true, refresh the script
 setTimeout(() => {
@@ -30,6 +28,7 @@ setTimeout(() => {
       console.log("Refreshed automatically");
       chrome.storage.local.set({ refreshedAutomatically: false }, () => {
         injectScript();
+        watchOverEverything();
       });
     }
   });
@@ -122,6 +121,25 @@ function injectScript() {
   });
 }
 
+function watchOverEverything() {
+  let currentValue = 0;
+  let futureValue = 0;
+  chrome.storage.local.get(["currentValue"], (result) => {
+    currentValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
+  });
+  setTimeout(() => {
+    chrome.storage.local.get(["currentValue"], (result) => {
+      futureValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
+      if (futureValue === currentValue) {
+        console.log("Unknown bug occurred, refreshing...");
+        chrome.storage.local.set({ refreshedAutomatically: true }, () => {
+          location.reload();
+        });
+      }
+    });
+  }, 10000);
+}
+
 // Add event listeners to the buttons
 document
   .getElementById("blocket-sniper-inject-script")
@@ -131,6 +149,7 @@ document
       targetElement.innerHTML = 0;
     });
     injectScript();
+    watchOverEverything();
   });
 // Add event listener to the reset button to reset the value of `i` to 0
 document
