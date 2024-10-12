@@ -108,17 +108,15 @@ function injectBlocket(i, latestArticleName) {
 // Inject the script into the current tab
 function injectScript() {
   // Retrieve the value of `i` from `chrome.storage` before injecting the script
-  chrome.storage.local.get(["currentValue"], (result) => {
+  chrome.storage.local.get(["currentValue", "latestArticleName"], (result) => {
     // Default `i` to 0 if no value is stored
     let i = result.currentValue || 0;
-    if (latestArticleName === undefined) {
-      latestArticleName = "No article";
-    }
+    let latestArticleName = result.latestArticleName || "";
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },
         function: injectBlocket,
-        args: [i, latestArticleName], // Pass the retrieved value of `i`
+        args: [i, latestArticleName], // Pass the retrieved value of `i` and `latestArticleName` to the script
       });
     });
   });
