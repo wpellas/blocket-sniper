@@ -1,6 +1,9 @@
 // Construct necessary elements
 const body = document.getElementsByClassName("blocket-sniper");
 const targetElement = document.getElementById("blocket-sniper-target-element");
+const activateSilentMode = document.getElementById(
+  "blocket-sniper-silent-mode"
+);
 const triggerAudio = new Audio("trigger.ogg");
 const silentTriggerAudio = new Audio("silent-trigger.mp3");
 const discordWebHook =
@@ -9,7 +12,7 @@ let latestArticleName;
 
 // Check if and what the value of `currentValue` is
 chrome.storage.local.get(
-  ["currentValue", "latestArticleName", "articleLinkHref"],
+  ["currentValue", "latestArticleName", "articleLinkHref", "isSilentMode"],
   (result) => {
     const currentValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
     targetElement.innerHTML = currentValue;
@@ -20,6 +23,11 @@ chrome.storage.local.get(
     // Check if and what the value of `articleLinkHref` is
     if (result.articleLinkHref) {
       console.log(`Value of article link: ${result.articleLinkHref}`);
+    }
+    if (result.isSilentMode) {
+      activateSilentMode.checked = true;
+    } else {
+      activateSilentMode.checked = false;
     }
   }
 );
@@ -189,6 +197,18 @@ document
     sendDiscordMessage("Manuell reset av räknare");
     location.reload();
   });
+// Add event listener to the silent mode checkbox
+activateSilentMode.addEventListener("click", (e) => {
+  if (activateSilentMode.checked) {
+    chrome.storage.local.set({ isSilentMode: true }, () => {
+      console.log("Silent mode activated");
+    });
+  } else {
+    chrome.storage.local.set({ isSilentMode: false }, () => {
+      console.log("Silent mode deactivated");
+    });
+  }
+});
 
 // Listen for changes in `currentValue` and re-inject script after a delay
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -214,10 +234,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
   // Play the sound and open the article in a new tab if `latestArticleName` changes
   if (changes.latestArticleName) {
-    const checkIfSilentMode = document.getElementById(
-      "blocket-sniper-silent-mode"
-    );
-    if (checkIfSilentMode.checked) {
+    if (activateSilentMode.checked) {
       // play the sound from the soundfile "silent-trigger.mp3"
       silentTriggerAudio.play();
     } else {
