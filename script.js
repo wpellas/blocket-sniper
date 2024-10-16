@@ -2,6 +2,7 @@
 const body = document.getElementsByClassName("blocket-sniper");
 const targetElement = document.getElementById("blocket-sniper-target-element");
 const triggerAudio = new Audio("trigger.ogg");
+const silentTriggerAudio = new Audio("silent-trigger.mp3");
 let latestArticleName;
 
 // Check if and what the value of `currentValue` is
@@ -189,8 +190,16 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
   // Play the sound and open the article in a new tab if `latestArticleName` changes
   if (changes.latestArticleName) {
-    // play the sound from the soundfile "trigger.ogg"
-    triggerAudio.play();
+    const checkIfSilentMode = document.getElementById(
+      "blocket-sniper-silent-mode"
+    );
+    if (checkIfSilentMode.checked) {
+      // play the sound from the soundfile "silent-trigger.mp3"
+      silentTriggerAudio.play();
+    } else {
+      // play the sound from the soundfile "trigger.ogg"
+      triggerAudio.play();
+    }
     let articleLinkHref;
     chrome.storage.local.get(["articleLinkHref"], (result) => {
       if (result.articleLinkHref) {

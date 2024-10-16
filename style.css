@@ -14,7 +14,12 @@ body {
   overflow: hidden;
   padding: 16px 8px;
 }
-.blocket-sniper-logo {
+.blocket-sniper-silent-mode {
+  display: flex;
+  gap: 4px;
+}
+.blocket-sniper-logo,
+.blocket-sniper-silent-mode {
   max-width: 256px;
   margin: 0 auto;
 }
