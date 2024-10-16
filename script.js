@@ -3,6 +3,8 @@ const body = document.getElementsByClassName("blocket-sniper");
 const targetElement = document.getElementById("blocket-sniper-target-element");
 const triggerAudio = new Audio("trigger.ogg");
 const silentTriggerAudio = new Audio("silent-trigger.mp3");
+const discordWebHook =
+  "https://discord.com/api/webhooks/1295972631149023294/nnki2giaIU2ZjlPpElc29YpJUeQm0m7XyV80S55I9YyXZ7_UAku2Tm5Bmrh_8RgsWNTL";
 let latestArticleName;
 
 // Check if and what the value of `currentValue` is
@@ -145,6 +147,27 @@ function watchOverEverything() {
   }, 25000);
 }
 
+// Send a message to a Discord webhook
+function sendDiscordMessage(content) {
+  fetch(discordWebHook, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: content,
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Message sent successfully");
+      } else {
+        console.error("Failed to send message", response.statusText);
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
 // Add event listeners to the buttons
 document
   .getElementById("blocket-sniper-inject-script")
@@ -163,6 +186,7 @@ document
     chrome.storage.local.set({ currentValue: 0 }, () => {
       console.log("Value of i reset to 0");
     });
+    sendDiscordMessage("Manuell reset av räknare");
     location.reload();
   });
 
@@ -207,6 +231,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         articleLinkHref = result.articleLinkHref;
         // chrome.tabs.create({ url: articleLinkHref, active: false });
         // Also open it in a new window
+        sendDiscordMessage("Ny annons inlagd: " + articleLinkHref);
         chrome.windows.create({ url: articleLinkHref, focused: false });
       }
     });
