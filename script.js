@@ -248,7 +248,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         articleLinkHref = result.articleLinkHref;
         // chrome.tabs.create({ url: articleLinkHref, active: false });
         // Also open it in a new window
-        sendDiscordMessage("Ny annons inlagd: " + articleLinkHref);
+        sendDiscordMessage(
+          `Ny annons inlagd: ${articleLinkHref} <@104757504541515776>`
+        );
         chrome.windows.create({ url: articleLinkHref, focused: false });
       }
     });
