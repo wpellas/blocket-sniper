@@ -64,8 +64,8 @@ checkAutomaticRefresh(); // Check if the script should be refreshed
 
 // Inject the script into the current tab
 function injectBlocket() {
-  // Random delay between 1 and 2 seconds
-  const randomDelay = Math.floor(Math.random() * 2000) + 1000;
+  // Random delay between 0.1 and 1 second
+  const randomDelay = Math.floor(Math.random() * 1000) + 100;
   // Retrieve the value of `i` from `chrome.storage` before injecting the script
   let i;
   let latestArticleName;
