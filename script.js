@@ -10,6 +10,7 @@ const silentTriggerAudio = new Audio("silent-trigger.mp3");
 const discordWebHook =
   "https://discord.com/api/webhooks/1295972631149023294/nnki2giaIU2ZjlPpElc29YpJUeQm0m7XyV80S55I9YyXZ7_UAku2Tm5Bmrh_8RgsWNTL";
 let latestArticleName;
+let i; // Create iteration variable
 // Automatically open the inspector of the extension when it's opened
 
 // Check if and what the value of `currentValue` is
@@ -41,22 +42,25 @@ function fetchLocalStorage() {
 fetchLocalStorage(); // Fetch the local storage
 
 // Check if and what the value of `refreshedAutomatically` is, if it's true, refresh the script
-setTimeout(() => {
-  chrome.storage.local.get(["refreshedAutomatically"], (result) => {
-    if (result.refreshedAutomatically) {
-      chrome.storage.local.set(
-        { refreshedAutomatically: false, outputLog: "Refreshed automatically" },
-        () => {
-          injectScript();
-          watchOverEverything();
-        }
-      );
-    }
-  });
-}, 3000);
-
-// Create iteration variable
-let i;
+function checkAutomaticRefresh() {
+  setTimeout(() => {
+    chrome.storage.local.get(["refreshedAutomatically"], (result) => {
+      if (result.refreshedAutomatically) {
+        chrome.storage.local.set(
+          {
+            refreshedAutomatically: false,
+            outputLog: "Refreshed automatically",
+          },
+          () => {
+            injectScript();
+            watchOverEverything();
+          }
+        );
+      }
+    });
+  }, 2000);
+}
+checkAutomaticRefresh(); // Check if the script should be refreshed
 
 // Inject the script into the current tab
 function injectBlocket() {
@@ -147,6 +151,7 @@ function injectScript() {
   });
 }
 
+// Watch over the value of `currentValue` and refresh the script if it doesn't change
 function watchOverEverything() {
   let currentValue = 0;
   let futureValue = 0;
@@ -192,6 +197,7 @@ function sendDiscordMessage(content) {
     .catch((error) => console.error("Error:", error));
 }
 
+// Play the decided soundfile
 function playAudioNotice() {
   if (activateSilentMode.checked) {
     silentTriggerAudio.play(); // play the sound from the soundfile "silent-trigger.mp3"
