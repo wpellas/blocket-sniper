@@ -125,7 +125,8 @@ function injectBlocket() {
           } else {
             setTimeout(() => {
               chrome.storage.local.set({
-                outputLog: "Ingen ny annons hittad, uppdaterar...",
+                outputLog:
+                  "Ingen ny annons hittad, uppdaterar... <img src='./images/loading.gif'>",
               });
             }, 500);
           }

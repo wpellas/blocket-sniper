@@ -60,3 +60,12 @@ button#blocket-sniper-reset-counter:hover {
   justify-content: center;
   gap: 8px;
 }
+#blocket-sniper-output-log {
+  text-align: center;
+  height: 32px;
+}
+#blocket-sniper-output-log img {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
