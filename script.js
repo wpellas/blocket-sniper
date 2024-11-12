@@ -341,9 +341,11 @@ function onStorageChange() {
             // Open articleLinkHref in a new tab, unfocused to not interrupt the script
             articleLinkHref = result.articleLinkHref;
             discordUserID = result.discordUserID;
-            sendDiscordMessage(
-              `Ny annons inlagd: ${articleLinkHref} ${discordUserID}`
-            );
+            if (!isSilentMode) {
+              sendDiscordMessage(
+                `Ny annons inlagd: ${articleLinkHref} ${discordUserID}`
+              );
+            }
             chrome.windows.create({ url: articleLinkHref, focused: false }); // Open it in a new window
           }
         }
