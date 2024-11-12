@@ -13,13 +13,87 @@ body {
   border: 4px solid #4caf50;
   overflow: hidden;
   padding: 16px 8px;
+  position: relative;
 }
+
+/* Begin Settings */
+#blocket-sniper-open-settings {
+  height: 32px;
+  width: 32px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  cursor: pointer;
+}
+#blocket-sniper-open-settings img {
+  height: 32px;
+  width: 32px;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+#blocket-sniper-settings-page {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+}
+#blocket-sniper-settings-page.active {
+  height: 100%;
+}
+.blocket-sniper-settings-body {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+#blocket-sniper-close-settings {
+  height: 32px;
+  width: 32px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  cursor: pointer;
+}
+#blocket-sniper-close-settings img {
+  height: 32px;
+  width: 32px;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+#blocket-sniper-save-settings {
+  margin-top: 8px;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+}
+#blocket-sniper-save-settings-complete {
+  color: #4caf50;
+  font-weight: bold;
+  margin-top: 4px;
+}
+/* End Settings */
+
 .blocket-sniper-silent-mode {
   display: flex;
   gap: 4px;
 }
 .blocket-sniper-logo,
-.blocket-sniper-silent-mode {
+.blocket-sniper-silent-mode,
+.blocket-sniper-text-input {
   max-width: 256px;
   margin: 0 auto;
 }
@@ -33,7 +107,7 @@ body {
   flex-wrap: wrap;
   gap: 8px;
 }
-button {
+button.action-button {
   background-color: #4caf50;
   color: white;
   padding: 14px 20px;

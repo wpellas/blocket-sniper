@@ -1,5 +1,9 @@
 // Construct necessary elements
 const body = document.getElementsByClassName("blocket-sniper");
+const settingsPage = document.getElementById("blocket-sniper-settings-page");
+const saveSettingsResult = document.getElementById(
+  "blocket-sniper-save-settings-complete"
+);
 const targetElement = document.getElementById("blocket-sniper-target-element");
 const outputLog = document.getElementById("blocket-sniper-output-log");
 const activateSilentMode = document.getElementById(
@@ -7,16 +11,39 @@ const activateSilentMode = document.getElementById(
 );
 const triggerAudio = new Audio("trigger.ogg");
 const silentTriggerAudio = new Audio("silent-trigger.mp3");
-const discordWebHook =
-  "https://discord.com/api/webhooks/1295972631149023294/nnki2giaIU2ZjlPpElc29YpJUeQm0m7XyV80S55I9YyXZ7_UAku2Tm5Bmrh_8RgsWNTL";
+const discordWebHookField = document.getElementById(
+  "blocket-sniper-discord-hook"
+);
+const discordUserIDField = document.getElementById(
+  "blocket-sniper-discord-user-id"
+);
+let discordWebHook;
+let discordUserID;
 let latestArticleName;
 let i; // Create iteration variable
-// Automatically open the inspector of the extension when it's opened
+
+// Save settings
+function saveSettings() {
+  discordWebHook = discordWebHookField.value;
+  discordUserID = discordUserIDField.value;
+  chrome.storage.local.set({
+    discordWebHook: discordWebHook,
+    discordUserID: discordUserID,
+  });
+  saveSettingsResult.innerHTML = "Inställningar sparade!";
+}
 
 // Check if and what the value of `currentValue` is
 function fetchLocalStorage() {
   chrome.storage.local.get(
-    ["currentValue", "latestArticleName", "articleLinkHref", "isSilentMode"],
+    [
+      "currentValue",
+      "latestArticleName",
+      "articleLinkHref",
+      "isSilentMode",
+      "discordWebHook",
+      "discordUserID",
+    ],
     (result) => {
       const currentValue = result.currentValue || 0; // Default to 0 if `currentValue` is undefined
       targetElement.innerHTML = currentValue;
@@ -35,6 +62,14 @@ function fetchLocalStorage() {
       }
       if (result.outputLog) {
         outputLog.innerHTML = result.outputLog;
+      }
+      if (result.discordWebHook) {
+        discordWebHookField.value = result.discordWebHook;
+        discordWebHook = result.discordWebHook;
+      }
+      if (result.discordUserID) {
+        discordUserIDField.value = result.discordUserID;
+        discordUserID = result.discordUserID;
       }
     }
   );
@@ -249,6 +284,22 @@ function listenToInputs() {
       });
     }
   });
+  // Open Settings
+  document
+    .getElementById("blocket-sniper-open-settings")
+    .addEventListener("click", (e) => {
+      settingsPage.classList.add("active");
+    });
+  document
+    .getElementById("blocket-sniper-close-settings")
+    .addEventListener("click", (e) => {
+      settingsPage.classList.remove("active");
+    });
+  document
+    .getElementById("blocket-sniper-save-settings")
+    .addEventListener("click", (e) => {
+      saveSettings();
+    });
 }
 listenToInputs(); // Listen to the inputs
 
@@ -282,16 +333,21 @@ function onStorageChange() {
     if (changes.latestArticleName) {
       playAudioNotice(); // Play the sound
       let articleLinkHref;
-      chrome.storage.local.get(["articleLinkHref"], (result) => {
-        if (result.articleLinkHref) {
-          // Open articleLinkHref in a new tab, unfocused to not interrupt the script
-          articleLinkHref = result.articleLinkHref;
-          sendDiscordMessage(
-            `Ny annons inlagd: ${articleLinkHref} <@104757504541515776>`
-          );
-          chrome.windows.create({ url: articleLinkHref, focused: false }); // Open it in a new window
+      let discordUserID;
+      chrome.storage.local.get(
+        ["articleLinkHref", "discordUserID"],
+        (result) => {
+          if (result.articleLinkHref) {
+            // Open articleLinkHref in a new tab, unfocused to not interrupt the script
+            articleLinkHref = result.articleLinkHref;
+            discordUserID = result.discordUserID;
+            sendDiscordMessage(
+              `Ny annons inlagd: ${articleLinkHref} ${discordUserID}`
+            );
+            chrome.windows.create({ url: articleLinkHref, focused: false }); // Open it in a new window
+          }
         }
-      });
+      );
     }
 
     if (changes.outputLog) {

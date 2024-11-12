@@ -6,20 +6,64 @@
     <link href="style.css" rel="stylesheet" />
   </head>
   <body class="blocket-sniper">
-    <img class="blocket-sniper-logo" src="/images/blocket.png" alt="" />
+    <div id="blocket-sniper-open-settings">
+      <img src="/images/settings.png" />
+    </div>
+    <div id="blocket-sniper-settings-page">
+      <div id="blocket-sniper-close-settings">
+        <img src="/images/close.png" />
+      </div>
+      <div class="blocket-sniper-settings-body">
+        <h2>Settings</h2>
+        <label
+          for="blocket-sniper-silent-mode"
+          class="blocket-sniper-silent-mode"
+        >
+          <p>Silent Mode</p>
+          <input
+            type="checkbox"
+            name="blocket-sniper-silent-mode"
+            id="blocket-sniper-silent-mode"
+            checked="false"
+          />
+        </label>
+        <label
+          for="blocket-sniper-discord-hook"
+          class="blocket-sniper-text-input"
+        >
+          <p>Discord Webhook</p>
+          <input
+            type="text"
+            name="blocket-sniper-discord-hook"
+            id="blocket-sniper-discord-hook"
+          />
+        </label>
+        <label
+          for="blocket-sniper-discord-user-id"
+          class="blocket-sniper-text-input"
+        >
+          <p>Discord User ID</p>
+          <input
+            type="text"
+            name="blocket-sniper-discord-user-id"
+            id="blocket-sniper-discord-user-id"
+          />
+        </label>
+        <button id="blocket-sniper-save-settings">Save</button>
+        <span id="blocket-sniper-save-settings-complete"></span>
+      </div>
+    </div>
+
+    <img class="blocket-sniper-logo" src="/images/blocket.png" />
     <h3 id="blocket-sniper-title">Sniper</h3>
-    <label for="blocket-sniper-silent-mode" class="blocket-sniper-silent-mode">
-      <p>Silent Mode</p>
-      <input
-        type="checkbox"
-        name="blocket-sniper-silent-mode"
-        id="blocket-sniper-silent-mode"
-        checked="false"
-      />
-    </label>
+
     <div class="blocket-sniper-actions">
-      <button id="blocket-sniper-inject-script">Inject Script</button>
-      <button id="blocket-sniper-reset-counter">Reset Counter</button>
+      <button class="action-button" id="blocket-sniper-inject-script">
+        Inject Script
+      </button>
+      <button class="action-button" id="blocket-sniper-reset-counter">
+        Reset Counter
+      </button>
     </div>
     <div class="blocket-sniper-reloads-tracker">
       Reloads:
